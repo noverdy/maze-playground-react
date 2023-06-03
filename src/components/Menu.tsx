@@ -12,10 +12,11 @@ import { twMerge } from 'tailwind-merge'
 
 interface MenuProps {
   menu: number
-  onChange: (i: number) => void
+  onToggle: (i: number) => void
+  onOpenSettings: VoidFunction
 }
 
-export default function Menu({ menu, onChange }: MenuProps) {
+export default function Menu({ menu, onToggle, onOpenSettings }: MenuProps) {
   return (
     <section className='overflow-hidden rounded-lg bg-white/25 text-lg shadow-md lg:flex lg:justify-between'>
       <ul className='grid grid-cols-4 divide-x divide-white/10 border-b border-white/10 text-center lg:border-b-0'>
@@ -24,7 +25,7 @@ export default function Menu({ menu, onChange }: MenuProps) {
             'cursor-pointer p-2 transition-colors hover:bg-white/25 lg:p-4',
             menu === 0 && 'bg-white/25'
           )}
-          onClick={() => onChange(0)}
+          onClick={() => onToggle(0)}
         >
           <FontAwesomeIcon icon={faPen} />
           <span className='ml-3 hidden lg:inline'>Draw Wall</span>
@@ -34,7 +35,7 @@ export default function Menu({ menu, onChange }: MenuProps) {
             'cursor-pointer p-2 transition-colors hover:bg-white/25 lg:p-4',
             menu === 1 && 'bg-white/25'
           )}
-          onClick={() => onChange(1)}
+          onClick={() => onToggle(1)}
         >
           <FontAwesomeIcon icon={faEraser} />
           <span className='ml-3 hidden lg:inline'>Remove Wall</span>
@@ -44,7 +45,7 @@ export default function Menu({ menu, onChange }: MenuProps) {
             'cursor-pointer p-2 transition-colors hover:bg-white/25 lg:p-4',
             menu === 2 && 'bg-white/25'
           )}
-          onClick={() => onChange(2)}
+          onClick={() => onToggle(2)}
         >
           <FontAwesomeIcon icon={faCar} />
           <span className='ml-3 hidden lg:inline'>Place Start</span>
@@ -54,7 +55,7 @@ export default function Menu({ menu, onChange }: MenuProps) {
             'cursor-pointer p-2 transition-colors hover:bg-white/25 lg:p-4',
             menu === 3 && 'bg-white/25'
           )}
-          onClick={() => onChange(3)}
+          onClick={() => onToggle(3)}
         >
           <FontAwesomeIcon icon={faFlagCheckered} />
           <span className='ml-3 hidden lg:inline'>Place Finish</span>
@@ -70,7 +71,10 @@ export default function Menu({ menu, onChange }: MenuProps) {
             <FontAwesomeIcon icon={faTrash} />
             <span className='ml-3 hidden lg:inline'>Clear All</span>
           </li>
-          <li className='cursor-pointer p-4 transition-colors hover:bg-white/25'>
+          <li
+            className='cursor-pointer p-4 transition-colors hover:bg-white/25'
+            onClick={onOpenSettings}
+          >
             <FontAwesomeIcon icon={faGear} />
           </li>
         </div>

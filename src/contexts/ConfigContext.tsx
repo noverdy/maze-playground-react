@@ -5,7 +5,7 @@ interface UserConfig {
 }
 
 const DEFAULT_CONFIG: UserConfig = {
-  gridSize: 30
+  gridSize: 50
 }
 
 const UserConfigContext = createContext<{
