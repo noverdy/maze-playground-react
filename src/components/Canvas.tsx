@@ -2,8 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { useCanvas } from '@/contexts/CanvasContext'
 import { useConfig } from '@/contexts/ConfigContext'
+import coordsToString from '@/utils/coordinate'
 import debounce from '@/utils/debounce'
-import coordsToString from '@/utils/gridKey'
 
 import GridItem from './GridItem'
 

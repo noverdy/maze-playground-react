@@ -1,4 +1,5 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { twMerge } from 'tailwind-merge'
 
 import { useConfig } from '@/contexts/ConfigContext'
 
@@ -9,7 +10,9 @@ interface SettingsProps {
 }
 
 export default function Settings({ onClose }: SettingsProps) {
-  const handleSubmit = (e: React.FormEvent) => {
+  const [closing, setClosing] = useState(false)
+
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
     const form = new FormData(e.target as HTMLFormElement)
@@ -37,8 +40,12 @@ export default function Settings({ onClose }: SettingsProps) {
 
   return (
     <div
-      onClick={onClose}
-      className='fixed inset-0 grid place-items-center bg-black/20 p-2 text-black backdrop-blur-sm'
+      onClick={() => setClosing(true)}
+      onAnimationEnd={() => closing && onClose()}
+      className={twMerge(
+        'fixed inset-0 grid place-items-center bg-black/20 p-2 text-black backdrop-blur-sm',
+        closing ? 'animate-fade-out opacity-0' : 'animate-fade-in'
+      )}
     >
       <form
         onClick={(e) => e.stopPropagation()}
@@ -52,7 +59,7 @@ export default function Settings({ onClose }: SettingsProps) {
         </div>
         <button
           type='button'
-          onClick={onClose}
+          onClick={() => setClosing(true)}
           className='mr-2 rounded-full bg-zinc-300 px-4 py-1'
         >
           Cancel
