@@ -7,5 +7,8 @@ module.exports = {
       sans: ['"Poppins"', 'sans-serif']
     }
   },
+  future: {
+    hoverOnlyWhenSupported: true
+  },
   plugins: []
 }

@@ -9,7 +9,7 @@ export default function App() {
   const [settingsOpen, setSettingsOpen] = useState(false)
 
   return (
-    <main className='flex h-screen flex-col gap-4 bg-gradient-to-tr from-fuchsia-800 to-indigo-800 p-4 text-white'>
+    <main className='fixed inset-0 flex flex-col gap-4 bg-gradient-to-tr from-fuchsia-800 to-indigo-800 p-4 text-white'>
       <Canvas menu={activeMenu} />
 
       <Menu

@@ -22,11 +22,13 @@ export default function GridItem({
         'relative grow cursor-crosshair border border-dashed border-white/10 hover:bg-white/10',
         active && 'bg-white/40 hover:bg-white/30'
       )}
+      onClick={onAction}
       onMouseDown={(e) => {
         e.preventDefault()
         onAction?.()
       }}
-      onMouseOver={(e) => {
+      onTouchStart={onAction}
+      onMouseEnter={(e) => {
         if (e.buttons === 1) {
           onAction?.()
         }

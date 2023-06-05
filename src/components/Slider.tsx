@@ -13,7 +13,7 @@ export default function Slider({ id, name, value }: SliderProps) {
       name={name}
       className='relative flex h-5 w-full touch-none select-none items-center'
       defaultValue={value ? [value] : [0]}
-      min={30}
+      min={20}
       max={100}
       step={1}
     >

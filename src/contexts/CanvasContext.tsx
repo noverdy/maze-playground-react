@@ -44,10 +44,12 @@ export default function CanvasProvider({
   const [walls, setWalls] = useState<Set<string>>(new Set())
 
   function addWall(coord: string) {
+    if (walls.has(coord)) return
     setWalls((curr) => new Set(curr.add(coord)))
   }
 
   function removeWall(coord: string) {
+    if (!walls.has(coord)) return
     setWalls((curr) => {
       curr.delete(coord)
       return new Set(curr)

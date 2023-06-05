@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { useCanvas } from '@/contexts/CanvasContext'
 import { useConfig } from '@/contexts/ConfigContext'
@@ -31,30 +31,31 @@ export default function Canvas({ menu }: CanvasProps) {
   const columnCount = Math.ceil(width / config.gridSize)
   const rowCount = Math.ceil(height / config.gridSize)
 
-  function handleAction(i: number, j: number) {
-    const coord = coordsToString(i, j)
-    if (menu === 0) {
-      addWall(coord)
-    }
-    if (menu === 1) {
-      removeWall(coord)
-    }
-    if (menu === 2) {
-      setStartPos(coord)
-    }
-    if (menu === 3) {
-      setEndPos(coord)
-    }
-  }
+  const handleAction = useCallback(
+    (i: number, j: number) => {
+      const coord = coordsToString(i, j)
+      if (menu === 0) {
+        addWall(coord)
+      }
+      if (menu === 1) {
+        removeWall(coord)
+      }
+      if (menu === 2) {
+        setStartPos(coord)
+      }
+      if (menu === 3) {
+        setEndPos(coord)
+      }
+    },
+    [menu, addWall, removeWall, setStartPos, setEndPos]
+  )
 
   useEffect(() => {
     const handleResize = () => {
       setWidth(ref.current?.offsetWidth || 0)
       setHeight(ref.current?.offsetHeight || 0)
     }
-
     const handleResizeDebounced = debounce(handleResize)
-
     handleResize()
 
     window.addEventListener('resize', handleResizeDebounced)
@@ -62,6 +63,34 @@ export default function Canvas({ menu }: CanvasProps) {
       window.removeEventListener('resize', handleResizeDebounced)
     }
   }, [])
+
+  useEffect(() => {
+    const canvas = ref.current
+
+    function handleTouch(e: TouchEvent) {
+      if (!canvas) {
+        return
+      }
+      if (e.cancelable) {
+        e.preventDefault()
+      }
+
+      const i = Math.round(
+        (e.touches[0].clientY - canvas.offsetTop) / config.gridSize
+      )
+      const j = Math.round(
+        (e.touches[0].clientX - canvas.offsetLeft) / config.gridSize
+      )
+
+      handleAction(i, j)
+    }
+
+    canvas?.addEventListener('touchmove', handleTouch)
+
+    return () => {
+      canvas?.removeEventListener('touchmove', handleTouch)
+    }
+  }, [ref, config.gridSize, handleAction])
 
   return (
     <section
