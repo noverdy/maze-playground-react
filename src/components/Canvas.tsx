@@ -1,19 +1,51 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { useUserConfig } from '@/contexts/ConfigContext'
+import { useCanvas } from '@/contexts/CanvasContext'
+import { useConfig } from '@/contexts/ConfigContext'
 import debounce from '@/utils/debounce'
+import coordsToString from '@/utils/gridKey'
 
 import GridItem from './GridItem'
 
-export default function Canvas() {
-  const { userConfig } = useUserConfig()
+interface CanvasProps {
+  menu: number
+}
+
+export default function Canvas({ menu }: CanvasProps) {
   const ref = useRef<HTMLElement | null>(null)
+
+  const { config } = useConfig()
+  const {
+    walls,
+    startPos,
+    endPos,
+    addWall,
+    removeWall,
+    setStartPos,
+    setEndPos
+  } = useCanvas()
 
   const [width, setWidth] = useState(0)
   const [height, setHeight] = useState(0)
 
-  const columnCount = Math.ceil(width / userConfig.gridSize)
-  const rowCount = Math.ceil(height / userConfig.gridSize)
+  const columnCount = Math.ceil(width / config.gridSize)
+  const rowCount = Math.ceil(height / config.gridSize)
+
+  function handleAction(i: number, j: number) {
+    const coord = coordsToString(i, j)
+    if (menu === 0) {
+      addWall(coord)
+    }
+    if (menu === 1) {
+      removeWall(coord)
+    }
+    if (menu === 2) {
+      setStartPos(coord)
+    }
+    if (menu === 3) {
+      setEndPos(coord)
+    }
+  }
 
   useEffect(() => {
     const handleResize = () => {
@@ -37,16 +69,20 @@ export default function Canvas() {
       className='grow overflow-hidden rounded-lg bg-white/25 text-lg shadow-md'
     >
       {[...Array(rowCount).keys()].map((i) => (
-        <div key={i} className='flex' style={{ height: userConfig.gridSize }}>
-          {[...Array(columnCount).keys()].map((j) => (
-            <GridItem key={generateKey(i, j)} />
-          ))}
+        <div key={i} className='flex' style={{ height: config.gridSize }}>
+          {[...Array(columnCount).keys()].map((j) => {
+            return (
+              <GridItem
+                key={coordsToString(i, j)}
+                active={walls.has(coordsToString(i, j))}
+                start={coordsToString(i, j) === startPos}
+                end={coordsToString(i, j) === endPos}
+                onAction={() => handleAction(i, j)}
+              />
+            )
+          })}
         </div>
       ))}
     </section>
   )
-}
-
-function generateKey(width: number, height: number): string {
-  return `${width}-${height}`
 }

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-import { useUserConfig } from '@/contexts/ConfigContext'
+import { useConfig } from '@/contexts/ConfigContext'
 
 import Slider from './Slider'
 
@@ -9,19 +9,19 @@ interface SettingsProps {
 }
 
 export default function Settings({ onClose }: SettingsProps) {
-  function handleSubmit(e: React.FormEvent) {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
     const form = new FormData(e.target as HTMLFormElement)
     const gridSize = form.get('gridSize')
       ? Number.parseInt(form.get('gridSize') as string)
-      : userConfig.gridSize
+      : config.gridSize
 
-    updateUserConfig({ gridSize })
+    updateConfig({ gridSize })
     onClose()
   }
 
-  const { userConfig, updateUserConfig } = useUserConfig()
+  const { config, updateConfig } = useConfig()
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -48,7 +48,7 @@ export default function Settings({ onClose }: SettingsProps) {
         <h2 className='mb-4 text-xl font-bold'>Settings</h2>
         <div className='mb-6 text-start'>
           <label htmlFor='grid-size'>Grid Size</label>
-          <Slider id='grid-size' name='gridSize' value={userConfig.gridSize} />
+          <Slider id='grid-size' name='gridSize' value={config.gridSize} />
         </div>
         <button
           type='button'

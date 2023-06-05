@@ -10,6 +10,8 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { twMerge } from 'tailwind-merge'
 
+import { useCanvas } from '@/contexts/CanvasContext'
+
 interface MenuProps {
   menu: number
   onToggle: (i: number) => void
@@ -17,6 +19,8 @@ interface MenuProps {
 }
 
 export default function Menu({ menu, onToggle, onOpenSettings }: MenuProps) {
+  const { clearAll } = useCanvas()
+
   return (
     <section className='overflow-hidden rounded-lg bg-white/25 text-lg shadow-md lg:flex lg:justify-between'>
       <ul className='grid grid-cols-4 divide-x divide-white/10 border-b border-white/10 text-center lg:border-b-0'>
@@ -67,7 +71,10 @@ export default function Menu({ menu, onToggle, onOpenSettings }: MenuProps) {
           <span className='ml-3'>Find Path!</span>
         </li>
         <div className='flex divide-x divide-white/10 lg:contents'>
-          <li className='cursor-pointer p-4 transition-colors hover:bg-white/25'>
+          <li
+            onClick={clearAll}
+            className='cursor-pointer p-4 transition-colors hover:bg-white/25'
+          >
             <FontAwesomeIcon icon={faTrash} />
             <span className='ml-3 hidden lg:inline'>Clear All</span>
           </li>

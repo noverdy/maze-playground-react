@@ -1,52 +1,50 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
-interface UserConfig {
+interface Config {
   gridSize: number
 }
 
-const DEFAULT_CONFIG: UserConfig = {
+const DEFAULT_CONFIG: Config = {
   gridSize: 50
 }
 
-const UserConfigContext = createContext<{
-  userConfig: UserConfig
-  updateUserConfig: (newConfig: UserConfig) => void
+const ConfigContext = createContext<{
+  config: Config
+  updateConfig: (newConfig: Config) => void
 }>({
-  userConfig: DEFAULT_CONFIG,
-  updateUserConfig: () => {
-    console.warn(
-      'updateUserConfig function not yet implemented in UserConfigContext'
-    )
+  config: DEFAULT_CONFIG,
+  updateConfig: () => {
+    console.warn('updateConfig function not yet implemented in ConfigContext')
   }
 })
 
-export function useUserConfig() {
-  return useContext(UserConfigContext)
+export function useConfig() {
+  return useContext(ConfigContext)
 }
 
-export default function UserConfigProvider({
+export default function ConfigProvider({
   children
 }: {
   children: React.ReactNode
 }): React.ReactElement {
-  const [userConfig, setUserConfig] = useState<UserConfig>(DEFAULT_CONFIG)
+  const [Config, setConfig] = useState<Config>(DEFAULT_CONFIG)
 
   useEffect(() => {
-    const storedConfig = localStorage.getItem('userConfig')
+    const storedConfig = localStorage.getItem('Config')
     if (storedConfig) {
-      setUserConfig(JSON.parse(storedConfig))
+      setConfig(JSON.parse(storedConfig))
     }
   }, [])
 
-  const updateUserConfig = (newConfig: UserConfig) => {
-    const config = { ...userConfig, ...newConfig }
-    localStorage.setItem('userConfig', JSON.stringify(config))
-    setUserConfig(config)
+  const updateConfig = (newConfig: Config) => {
+    const config = { ...Config, ...newConfig }
+    localStorage.setItem('Config', JSON.stringify(config))
+    setConfig(config)
   }
 
   return (
-    <UserConfigContext.Provider value={{ userConfig, updateUserConfig }}>
+    <ConfigContext.Provider value={{ config: Config, updateConfig }}>
       {children}
-    </UserConfigContext.Provider>
+    </ConfigContext.Provider>
   )
 }

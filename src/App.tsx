@@ -10,7 +10,7 @@ export default function App() {
 
   return (
     <main className='flex h-screen flex-col gap-4 bg-gradient-to-tr from-fuchsia-800 to-indigo-800 p-4 text-white'>
-      <Canvas />
+      <Canvas menu={activeMenu} />
 
       <Menu
         menu={activeMenu}
