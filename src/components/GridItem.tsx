@@ -20,7 +20,7 @@ export default function GridItem({
       draggable={false}
       className={twMerge(
         'relative grow cursor-crosshair border border-dashed border-white/10 hover:bg-white/10',
-        active && 'bg-white/40 hover:bg-white/30'
+        active && 'animate-scale-in bg-white/40 hover:bg-white/30'
       )}
       onClick={onAction}
       onMouseDown={(e) => {

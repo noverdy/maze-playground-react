@@ -1,7 +1,11 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
+
+import { SerializableSet } from '@/utils/SerializableSet'
+
+import { useConfig } from './ConfigContext'
 
 const CanvasContext = createContext<{
-  walls: Set<string>
+  walls: SerializableSet<string>
   startPos: string | null
   endPos: string | null
   addWall: (coord: string) => void
@@ -10,7 +14,7 @@ const CanvasContext = createContext<{
   setStartPos: React.Dispatch<React.SetStateAction<string>>
   setEndPos: React.Dispatch<React.SetStateAction<string>>
 }>({
-  walls: new Set(),
+  walls: new SerializableSet(),
   startPos: null,
   endPos: null,
   addWall: () => {
@@ -39,28 +43,48 @@ export default function CanvasProvider({
 }: {
   children: React.ReactNode
 }): React.ReactElement {
+  const { config, updateConfig } = useConfig()
+
   const [startPos, setStartPos] = useState<string>('')
   const [endPos, setEndPos] = useState<string>('')
-  const [walls, setWalls] = useState<Set<string>>(new Set())
+  const [walls, setWalls] = useState<SerializableSet<string>>(
+    new SerializableSet()
+  )
 
   function addWall(coord: string) {
     if (walls.has(coord)) return
-    setWalls((curr) => new Set(curr.add(coord)))
+    setWalls((curr) => new SerializableSet(curr.add(coord)))
   }
 
   function removeWall(coord: string) {
     if (!walls.has(coord)) return
     setWalls((curr) => {
       curr.delete(coord)
-      return new Set(curr)
+      return new SerializableSet(curr)
     })
   }
 
   function clearAll() {
-    setWalls(new Set())
+    setWalls(new SerializableSet())
     setStartPos('')
     setEndPos('')
   }
+
+  useEffect(() => {
+    setWalls(config.walls)
+    setStartPos(config.startPos)
+    setEndPos(config.endPos)
+  }, [config.walls, config.startPos, config.endPos])
+
+  useEffect(() => {
+    function autoSave() {
+      updateConfig({ walls, startPos, endPos })
+    }
+    window.addEventListener('beforeunload', autoSave)
+    return () => {
+      window.removeEventListener('beforeunload', autoSave)
+    }
+  }, [updateConfig, walls, startPos, endPos])
 
   return (
     <CanvasContext.Provider
