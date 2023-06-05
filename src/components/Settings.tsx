@@ -10,6 +10,8 @@ interface SettingsProps {
 }
 
 export default function Settings({ onClose }: SettingsProps) {
+  const { config, updateConfig } = useConfig()
+
   const [closing, setClosing] = useState(false)
 
   function handleSubmit(e: React.FormEvent) {
@@ -21,15 +23,13 @@ export default function Settings({ onClose }: SettingsProps) {
       : config.gridSize
 
     updateConfig({ gridSize })
-    onClose()
+    setClosing(true)
   }
-
-  const { config, updateConfig } = useConfig()
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === 'Escape') {
-        onClose()
+        setClosing(true)
       }
     }
     window.addEventListener('keydown', handleKeyDown)

@@ -56,7 +56,7 @@ export default function ConfigProvider({
   const updateConfig = (newConfig: ConfigInput) => {
     const mergedConfig = { ...config, ...newConfig }
     localStorage.setItem('config', JSON.stringify(mergedConfig))
-    setConfig(config)
+    setConfig(mergedConfig)
   }
 
   return (
